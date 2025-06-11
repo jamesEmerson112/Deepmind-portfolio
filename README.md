@@ -1,76 +1,125 @@
 # DeepMind Portfolio
 
-This repository contains three project concepts showcasing progressive levels of complexity in cloud architecture, machine learning implementation, and data engineering practices using AWS services and related technologies.
+This repository contains three project concepts that combine LLMs with neuroscience, showcasing progressive levels of complexity and development effort. Each project demonstrates different approaches to integrating AI with neuroscience principles, from text analysis to neural architecture enhancements to personalized cognitive applications, all leveraging AWS cloud services and advanced ML technologies.
 
 ## Projects Overview
 
-### [Project 1: Real-time ML Prediction Pipeline](./project1-ml-prediction-pipeline)
+### [Project 1: NeuroText Analyzer](./project1-neurotext-analyzer)
 
-A practical real-time prediction system that processes streaming data, applies machine learning models, and serves predictions through a serverless architecture.
+A specialized tool that uses LLMs to analyze neuroscience research papers and datasets, extracting key insights, findings, and relationships from neuroscience literature.
 
 **Development Time:** 10 Hours
-**Complexity Level:** Entry-level expert
+**Complexity Level:** Entry-level
 
 **Key Technologies:**
-- AWS Lambda, SageMaker, DynamoDB, Step Functions
-- XGBoost for prediction algorithms
-- Docker and LocalStack for local development
+- **AWS Lambda** for serverless text extraction and processing
+- **AWS DynamoDB** for storing neuroscience entities and relationships
+- **AWS Step Functions** for orchestrating the analysis pipeline
+- **AWS SageMaker** for hosting custom NLP models
+- **XGBoost** for paper classification and insights extraction
+- **OpenAI API/Llama** for text understanding and analysis
+- **Docker** and **LocalStack** for local development
 
-[View Project Details](./project1-ml-prediction-pipeline)
+[View Project Details](./project1-neurotext-analyzer)
 
-### [Project 2: Data Warehouse Analytics Platform](./project2-data-warehouse-analytics)
+### [Project 2: BrainInspired LLM Enhancement](./project2-braininspired-llm-enhancement)
 
-An end-to-end data platform that ingests, processes, and analyzes datasets for business intelligence and analytics with anomaly detection capabilities.
+A system that implements neuroscience-inspired attention mechanisms and memory systems to enhance LLM performance on specific tasks, based on principles from hippocampal memory systems.
 
 **Development Time:** 20 Hours
-**Complexity Level:** Intermediate expert
+**Complexity Level:** Intermediate
 
 **Key Technologies:**
-- AWS ECS, Redshift, SQS, Lambda, Step Functions
-- Apache Airflow for ETL orchestration
-- Random Forest for anomaly detection
-- Docker for containerized processing
+- **AWS SageMaker** for training and hosting LLMs with custom architectures
+- **AWS Lambda** for serverless memory indexing and context management
+- **AWS DynamoDB** for episodic memory storage
+- **AWS Step Functions** for orchestrating brain-inspired processing
+- **XGBoost/Random Forest** models for supporting classification tasks
+- **MLflow** for tracking experiments with different brain-inspired architectures
+- **Modified transformer attention mechanisms** inspired by neural processing
+- **Docker** and **LocalStack** for local development
 
-[View Project Details](./project2-data-warehouse-analytics)
+[View Project Details](./project2-braininspired-llm-enhancement)
 
-### [Project 3: Multi-model ML Platform with Automated Deployment](./project3-multi-model-ml-platform)
+### [Project 3: NeuroLLM Assistant Platform](./project3-neurollm-assistant-platform)
 
-A comprehensive platform for automated machine learning model training, evaluation, selection, and deployment with a focus on CI/CD practices.
+A comprehensive platform that combines LLMs with neuroscience data analysis to provide personalized cognitive insights and recommendations based on neural data patterns.
 
 **Development Time:** 30 Hours
-**Complexity Level:** Advanced expert
+**Complexity Level:** Advanced
 
 **Key Technologies:**
-- AWS SageMaker, Lambda, Step Functions, DynamoDB, ECS
-- XGBoost and Random Forest algorithms
-- MLflow for model tracking
-- Docker and LocalStack for local development
+- **AWS SageMaker** for training and hosting LLMs and ML models
+- **AWS Lambda** for serverless data processing and analysis
+- **AWS DynamoDB** for user profiles and session data
+- **AWS Neptune** for neuroscience knowledge graph
+- **AWS S3** for neuroscience data lake
+- **AWS ECS** for container orchestration
+- **AWS Step Functions** for complex workflow orchestration
+- **XGBoost/Random Forest** for anomaly detection and pattern classification
+- **MLflow** for experiment tracking and model registry
+- **React** and **CloudFront** for interactive dashboard
+- **Docker** and **LocalStack** for local development
 
-[View Project Details](./project3-multi-model-ml-platform)
+[View Project Details](./project3-neurollm-assistant-platform)
 
 ## Project Progression
 
-The three projects represent a natural progression in complexity and development effort:
+The three projects represent a natural progression in complexity and development effort, all leveraging AWS cloud services and ML technologies:
 
-1. **Project 1 (10 hours)** focuses on a streamlined implementation with core AWS serverless services and basic ML deployment.
+1. **Project 1 (10 hours)** uses serverless Lambda functions and DynamoDB to create a scalable system for analyzing neuroscience texts with LLMs, representing an entry point into combining these technologies.
 
-2. **Project 2 (20 hours)** builds on these concepts, adding container orchestration, data warehouse technology, and more sophisticated ETL processes.
+2. **Project 2 (20 hours)** goes deeper by deploying modified LLM architectures on SageMaker with neuroscience-inspired memory systems in DynamoDB, implementing brain-inspired memory and attention mechanisms within a cloud-native architecture.
 
-3. **Project 3 (30 hours)** represents the most advanced implementation with multi-model training, automated evaluation, sophisticated deployment strategies, and full CI/CD integration.
+3. **Project 3 (30 hours)** represents the most advanced integration, with a comprehensive AWS architecture using SageMaker, Neptune, ECS, and Step Functions to create a complete platform that processes neural data through LLMs and ML models to provide actionable insights.
 
-## Common Features Across Projects
+## Common Technology Stack Across Projects
 
-- **Infrastructure as Code**: All projects use AWS CDK for deployment
-- **Local Development**: Docker and LocalStack for AWS service emulation
-- **CI/CD Integration**: GitHub Actions workflows for continuous integration
-- **Monitoring and Alerting**: CloudWatch dashboards and alerts
-- **Documentation**: Comprehensive READMEs and architectural diagrams
+### AWS Services
+- **SageMaker**: For hosting and training LLMs and ML models
+- **Lambda**: For serverless processing functions
+- **DynamoDB**: For flexible, scalable data storage
+- **Step Functions**: For orchestrating complex workflows
+- **CloudWatch**: For monitoring and observability
+
+### ML & Data Science
+- **XGBoost/Random Forest**: For classification and anomaly detection
+- **MLflow**: For experiment tracking and model registry
+- **LLM Integration**: Using various LLM models across all projects
+
+### Development & Deployment
+- **Docker**: For containerization and consistent environments
+- **LocalStack**: For local AWS service emulation
+- **GitHub Actions**: For CI/CD pipelines
+- **Infrastructure as Code**: Using AWS CDK or Terraform
 
 ## Getting Started
 
 Each project contains its own detailed README with setup instructions, architecture diagrams, and usage examples. The READMEs include a breakdown of development time by phase to help you understand the effort involved in each component.
 
 Navigate to the individual project directories to learn more about each implementation.
+
+## Local Development Environment
+
+All projects can be run locally using Docker and LocalStack to emulate AWS services:
+
+1. Install prerequisites:
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+
+# Install LocalStack
+pip install localstack
+```
+
+2. Clone the repository:
+```bash
+git clone <repository-url>
+cd deepmind-portfolio
+```
+
+3. Follow the specific setup instructions in each project's README.
 
 ## License
 
