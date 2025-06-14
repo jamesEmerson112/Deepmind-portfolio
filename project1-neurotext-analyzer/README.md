@@ -38,132 +38,98 @@
 
 ---
 
-## Phased Learning Roadmap
+## Key Objectives (2025 Update)
 
-To make this project approachable for new learners, the development is split into three progressive phases. Each phase is broken down into actionable steps and deliverables:
-
----
-
-### Phase 1: Core Paper Analysis Foundation (3-4 hours)
-
-#### TODO List
-
-- [ ] **Project Setup & Environment**
-  - [ ] Create a basic project structure with folders for code, data, and templates
-  - [ ] Set up the Go backend in `BackEnd/` using Go modules
-  - [ ] Install dependencies: Gin, rsc.io/pdf or unidoc/unipdf, OpenAI Go client, AWS SDK for Go
-  - [ ] Create a `.env` file for API keys and configuration
-  - [ ] Configure a simple logging system
-
-- [ ] **PDF Text Extraction Module**
-  - [ ] Write a module to extract text from PDFs using PyPDF2
-  - [ ] Extract metadata (author, title, date)
-  - [ ] Attempt to split text by sections (abstract, methods, results, discussion)
-  - [ ] Handle edge cases (multi-column, images, tables)
-  - [ ] Include sample neuroscience papers for testing
-
-- [ ] **Basic LLM Integration**
-  - [ ] Connect to OpenAI API (or local Llama)
-  - [ ] Create a basic prompt template for extracting:
-    - [ ] Key brain regions
-    - [ ] Research methodologies
-    - [ ] Main findings
-    - [ ] Correlations between brain regions and functions
-  - [ ] Process extracted text in manageable chunks
-  - [ ] Parse LLM responses into structured data
-
-- [ ] **Simple Web Interface**
-  - [ ] Build a Flask app with:
-    - [ ] Home page for PDF upload
-    - [ ] Results page to display analysis
-  - [ ] Create basic HTML templates and CSS
-  - [ ] Implement file upload and session management
-
-**Phase 1 Deliverable:**
-A working local web app where users can upload a neuroscience PDF, view extracted text, and see a basic LLM-powered analysis.
+- Upload neuroscience research papers (PDFs) with user highlights
+- Automatically extract and visualize highlighted sections using LLMs and prompt engineering
+- Generate ASCII/text-based visual abstractions of entire papers for quick review
+- Auto-generate tags, categories, and summaries using AI
+- Build a graph-based reference map connecting papers by tags, citations, and content similarity
+- Serve as a personal neuroscience reading blog and knowledge base
 
 ---
 
-### Phase 2: Enhanced Analysis & AWS Integration (3-4 hours)
-
-#### TODO List
-
-- [ ] **Improved LLM Prompting**
-  - [ ] Create specialized prompts for different analysis types (brain regions, methods, findings)
-  - [ ] Implement prompt chaining for progressive analysis
-  - [ ] Add prompt versioning and evaluation
-
-- [ ] **DynamoDB Integration**
-  - [ ] Install and configure boto3
-  - [ ] Write a module for DynamoDB CRUD operations
-  - [ ] Design schema for storing entities and relationships
-  - [ ] Add LocalStack configuration for local AWS emulation
-
-- [ ] **Lambda Functions**
-  - [ ] Create Lambda functions for:
-    - [ ] Text extraction
-    - [ ] LLM processing
-    - [ ] Visualization generation
-  - [ ] Set up local Lambda testing and deployment packages
-
-- [ ] **Step Functions Workflow**
-  - [ ] Define a Step Functions state machine for the analysis pipeline
-  - [ ] Implement error handling and retry logic
-  - [ ] Visualize the workflow
-
-**Phase 2 Deliverable:**
-An enhanced app with specialized LLM analysis, persistent storage in DynamoDB, and a serverless processing pipeline using AWS services (or LocalStack).
-
----
-
-### Phase 3: Advanced Features & ML Integration (3-4 hours)
-
-#### TODO List
-
-- [ ] **XGBoost Paper Classification**
-  - [ ] Install scikit-learn, xgboost, pandas, numpy
-  - [ ] Write feature extraction and classification modules
-  - [ ] Create a labeled dataset and training pipeline
-  - [ ] Integrate classification results into the main analysis
-
-- [ ] **Enhanced Architecture Components**
-  - [ ] Add SQS for paper processing requests and dead-letter queue
-  - [ ] Implement Airflow DAGs for workflow orchestration and retraining
-  - [ ] Set up Redshift (or PostgreSQL) for analytics storage and ETL
-
-- [ ] **Interactive Visualizations**
-  - [ ] Install plotly and networkx
-  - [ ] Build modules for relationship graphs and brain region visualization
-  - [ ] Integrate interactive visualizations into the web interface
-
-- [ ] **Comprehensive Docker Setup**
-  - [ ] Create Dockerfiles for each component (web, lambda, ML)
-  - [ ] Write a docker-compose.yml for the full stack (web, LocalStack, PostgreSQL, Airflow, Redis)
-  - [ ] Add volume mounts, health checks, and monitoring
-
-**Phase 3 Deliverable:**
-A production-ready NeuroText Analyzer with ML-powered classification, advanced data pipeline, rich visualizations, and a full Dockerized local development environment.
-
----
-
-**Learning Path Between Phases:**
-- From Phase 1 to 2: Learn AWS basics, improve LLM prompting, understand serverless patterns
-- From Phase 2 to 3: Learn ML integration, message queuing, workflow orchestration, data visualization, and Docker
-
-**Suggested Timeline:**
-- Phase 1: 1 week (get a working prototype)
-- Phase 2: 1-2 weeks (add AWS and improve analysis)
-- Phase 3: 2-3 weeks (add advanced features and production-readiness)
-
-Each phase builds on the previous, ensuring incremental progress and a working system at every step.
-
----
-
-This entry-level project combines LLMs with neuroscience by creating a specialized tool that analyzes neuroscience research papers and datasets. NeuroText Analyzer extracts key insights, findings, and relationships from neuroscience literature and presents them in an accessible format for researchers and students.
-
----
+## Phased Roadmap (2025 Blog)
 
 ## Deep Dive: Data Design for NeuroText Analyzer
+
+### ASCII Visualization: Data Model Relationships
+
+```
++-------------------+         +-------------------+
+|      Paper        |<>-------|     Section       |
++-------------------+         +-------------------+
+| ID                |         | ID                |
+| Title             |         | PaperID           |
+| Authors           |         | Title             |
+| ...               |         | Type              |
+| Sections[]        |         | Content           |
+| Findings[]        |         +-------------------+
+| Analysis          |
++-------------------+
+        |
+        | 1
+        |        *
+        v
++-------------------+
+|    Finding        |
++-------------------+
+| ID                |
+| PaperID           |
+| SectionID         |
+| Description       |
+| BrainRegions[]----+-------------------+
+| Functions[]-------+---+               |
+| Methodologies[]---+   |               |
+| Confidence        |   |               |
++-------------------+   |               |
+        |               |               |
+        |               |               |
+        v               v               v
++-------------+   +-------------+   +-------------+
+| BrainRegion |   |  Function   |   | Methodology |
++-------------+   +-------------+   +-------------+
+| ID          |   | ID          |   | ID          |
+| Name        |   | Name        |   | Name        |
+| ...         |   | ...         |   | ...         |
++-------------+   +-------------+   +-------------+
+
+        ^
+        |
+        | (Many-to-many via IDs)
+        |
++-------------------+
+|   Relationship    |
++-------------------+
+| ID                |
+| SourceType        |
+| SourceID          |
+| TargetType        |
+| TargetID          |
+| Type              |
+| Description       |
+| Strength          |
+| PaperIDs[]        |
++-------------------+
+
+        ^
+        |
+        | 1
+        |        1
+        v        v
++-------------------+
+|    Analysis       |
++-------------------+
+| ID                |
+| PaperID           |
+| Summary           |
+| KeyFindings[]     |
+| BrainRegions[]    |
+| Functions[]       |
+| Methodologies[]   |
+| CompletedAt       |
++-------------------+
+```
 
 ### 1. Core Data Models (Go Structs)
 
