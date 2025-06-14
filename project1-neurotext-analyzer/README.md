@@ -49,6 +49,257 @@
 
 ---
 
+## Required Technology Stack
+
+### Core Backend (Go)
+- **Go 1.20+**: Primary backend language
+- **Gin Web Framework**: High-performance HTTP server and routing
+- **UniDoc PDF Library**: PDF processing and highlight extraction
+- **OpenAI Go Client**: LLM integration for text analysis
+- **AWS SDK for Go v2**: AWS service integration
+- **Go Validator**: Request validation
+- **JWT-Go**: Authentication
+- **Zap/Logrus**: Structured logging
+- **Testify**: Testing framework
+- **Go Modules**: Dependency management
+
+### Database & Storage
+- **DynamoDB**: Primary NoSQL database for structured data
+- **TAO Graph Database**: For relationship mapping and knowledge graph
+- **Amazon S3**: PDF storage and large binary content
+- **Redis**: Caching and session management
+- **Cassandra**: (Optional) For high-volume analytics data
+- **PostgreSQL**: (Optional) For complex relational queries
+
+### AI & Machine Learning
+- **OpenAI API**: Primary LLM integration (GPT-4 or newer)
+- **LangChain Go**: (Optional) For advanced LLM workflows
+- **Text Embeddings**: For content similarity (OpenAI/SentenceTransformers)
+- **XGBoost**: For paper classification and automated tagging
+- **spaCy/NLTK**: (Optional) For specialized NLP preprocessing
+
+### Visualization & Frontend
+- **ASCII Art Libraries**: For text-based visualizations
+- **Mermaid.js**: For generating diagrams from text
+- **D3.js**: For interactive visualizations
+- **React**: Frontend framework
+- **Material UI/Tailwind CSS**: UI component library
+- **Redux/Context API**: State management
+- **Axios**: API client
+- **React Router**: Client-side routing
+- **React-PDF**: PDF viewer with annotation support
+
+### DevOps & Infrastructure
+- **Docker**: Containerization
+- **Docker Compose**: Local development environment
+- **LocalStack**: Local AWS service emulation
+- **AWS CDK/Terraform**: Infrastructure as code
+- **GitHub Actions**: CI/CD
+- **AWS Lambda**: Serverless functions
+- **AWS Step Functions**: Workflow orchestration
+- **AWS CloudWatch**: Monitoring and logging
+- **AWS SQS**: Message queue for asynchronous processing
+
+### Additional Tools
+- **Git**: Version control
+- **VSCode**: Recommended IDE with Go extensions
+- **Postman/Insomnia**: API testing
+- **DBeaver**: Database management
+- **AWS CLI**: Command-line interface for AWS
+
+### Tech Stack Evolution by Phase
+
+#### Phase 1 (Essential)
+- Go, Gin, UniDoc PDF Library
+- OpenAI Go Client
+- In-memory storage + File system
+- Basic ASCII visualization
+- Simple HTML/CSS frontend
+- Docker for local development
+
+#### Phase 2 (Enhanced)
+- DynamoDB integration
+- More sophisticated LLM prompting
+- Redis for caching
+- Enhanced visualization libraries
+- React frontend with basic components
+- LocalStack for AWS emulation
+
+#### Phase 3 (Advanced)
+- TAO Graph Database
+- Vector embeddings for similarity
+- SQS for async processing
+- XGBoost for classification
+- D3.js for interactive visualizations
+- Full React application with state management
+- Complete AWS deployment
+
+---
+
+## Phased Roadmap (2025 Blog Edition)
+
+### Phase 1: Core Highlight Extraction & Visualization (3-4 hours)
+
+**Technical TODO List**
+- [ ] **Go Backend Setup**
+  - [ ] Initialize Go module (`go mod init neurotext-analyzer`)
+  - [ ] Set up Gin web framework (`go get github.com/gin-gonic/gin`)
+  - [ ] Configure middleware for CORS, logging, and error handling
+  - [ ] Create project structure (handlers, services, models, utils)
+  - [ ] Implement basic health check endpoint `/api/health`
+- [ ] **PDF Processing Module**
+  - [ ] Add PDF library (`go get github.com/unidoc/unipdf/v3`)
+  - [ ] Implement PDF upload handler with multipart form support
+  - [ ] Create highlight extraction algorithm (detect annotation objects in PDF)
+  - [ ] Build text extraction service with context preservation
+  - [ ] Implement metadata extraction (title, authors, publication date)
+- [ ] **Data Models for Highlights**
+  - [ ] Define Go structs for Paper, Highlight, Section
+  - [ ] Create JSON serialization/deserialization helpers
+  - [ ] Implement in-memory storage (for Phase 1)
+  - [ ] Design data validation rules
+- [ ] **LLM Integration**
+  - [ ] Add OpenAI client (`go get github.com/sashabaranov/go-openai`)
+  - [ ] Implement context management for large papers
+  - [ ] Create prompt template manager
+  - [ ] Build basic prompt for highlight analysis
+  - [ ] Implement response parsing for structured data
+- [ ] **ASCII Visualization Generator**
+  - [ ] Create visualization service
+  - [ ] Implement simple ASCII diagram generation
+  - [ ] Design templates for different content types
+  - [ ] Build visualization caching mechanism
+- [ ] **Basic Web Interface**
+  - [ ] Set up static file serving
+  - [ ] Create upload form template
+  - [ ] Implement results display page
+  - [ ] Add basic CSS styling
+  - [ ] Implement paper list view
+
+**Phase 1 Deliverable:**
+Working Go application that allows PDF uploads, extracts highlighted text, processes it with LLM, and displays basic ASCII visualizations.
+
+---
+
+### Phase 2: Enhanced Analysis & Visualization (3-4 hours)
+
+**Technical TODO List**
+- [ ] **DynamoDB Integration**
+  - [ ] Add AWS SDK (`go get github.com/aws/aws-sdk-go-v2/dynamodb`)
+  - [ ] Design and create DynamoDB tables with Go structs
+  - [ ] Implement repository pattern for data access
+  - [ ] Create indexing strategy for efficient queries
+  - [ ] Add LocalStack for development
+- [ ] **Advanced Highlight Processing**
+  - [ ] Implement highlight color detection and classification
+  - [ ] Create context-aware highlight processing
+  - [ ] Build highlight merging for adjacent annotations
+  - [ ] Add support for comment annotations
+  - [ ] Implement highlight ranking by importance
+- [ ] **Specialized Prompt Engineering**
+  - [ ] Create prompt template system with parameterization
+  - [ ] Implement specialized prompts by highlight type
+  - [ ] Build chain-of-thought reasoning for complex highlights
+  - [ ] Add confidence scoring for generated content
+  - [ ] Implement prompt versioning and A/B testing
+- [ ] **Enhanced Visualization Generation**
+  - [ ] Create multi-level ASCII diagram generator
+  - [ ] Implement Mermaid.js diagram generation
+  - [ ] Build template matching for content types
+  - [ ] Create visualization selection algorithm
+  - [ ] Implement visualization export (PNG, SVG)
+- [ ] **Tagging & Categorization System**
+  - [ ] Design taxonomy data structure
+  - [ ] Implement tag extraction from highlights
+  - [ ] Create auto-categorization with LLM
+  - [ ] Build tag relationship graph
+  - [ ] Implement tag search and filtering
+- [ ] **API Enhancements**
+  - [ ] Create full RESTful API for all resources
+  - [ ] Add pagination, sorting, and filtering
+  - [ ] Implement robust error handling and status codes
+  - [ ] Create API documentation with Swagger
+  - [ ] Add rate limiting and API keys
+
+**Phase 2 Deliverable:**
+Enhanced system with persistent storage, advanced highlight processing, specialized visualizations, and comprehensive tagging.
+
+---
+
+### Phase 3: Knowledge Graph & Reference Mapping (3-4 hours)
+
+**Technical TODO List**
+- [ ] **Citation & Reference Extraction**
+  - [ ] Implement regex-based citation detection
+  - [ ] Create citation parsing for different formats
+  - [ ] Build DOI lookup and resolution
+  - [ ] Implement bibliography parsing
+  - [ ] Create citation graph data structure
+- [ ] **Graph Database Integration**
+  - [ ] Add TAO Graph Database client
+  - [ ] Design graph schema for papers and relationships
+  - [ ] Implement node and edge creation
+  - [ ] Create graph query service
+  - [ ] Build graph traversal utilities
+- [ ] **Content Similarity Analysis**
+  - [ ] Implement text embedding generation
+  - [ ] Create vector similarity calculation
+  - [ ] Build clustering algorithm for papers
+  - [ ] Implement recommendation engine
+  - [ ] Create content similarity visualization
+- [ ] **Advanced Knowledge Graph**
+  - [ ] Design comprehensive entity-relationship model
+  - [ ] Implement brain region, function, methodology extraction
+  - [ ] Create relationship detection between entities
+  - [ ] Build knowledge graph visualization
+  - [ ] Implement graph-based search
+- [ ] **Blog Post Generation**
+  - [ ] Create post template system
+  - [ ] Implement LLM-powered draft generation
+  - [ ] Build visualization integration in posts
+  - [ ] Create citation and reference formatting
+  - [ ] Implement post versioning and history
+- [ ] **Advanced UI/UX**
+  - [ ] Implement interactive graph visualization
+  - [ ] Create paper relationship browser
+  - [ ] Build advanced search with facets
+  - [ ] Implement customizable dashboards
+  - [ ] Create collaborative annotation features
+- [ ] **Performance Optimizations**
+  - [ ] Implement caching strategy (Redis)
+  - [ ] Create batch processing for large papers
+  - [ ] Optimize database queries and indexes
+  - [ ] Implement async processing with message queue
+  - [ ] Add horizontal scaling support
+
+**Phase 3 Deliverable:**
+Complete neuroscience reading blog with graph-based reference mapping, content similarity analysis, and comprehensive knowledge organization.
+
+---
+
+## TODO List (2025 Blog Edition)
+
+- [ ] **PDF Upload & Highlight Extraction**
+  - [ ] Upload neuroscience research papers (PDFs) with user highlights
+  - [ ] Extract highlighted text and metadata (title, authors, date, etc.)
+- [ ] **LLM-Powered Visualization**
+  - [ ] Use LLMs to generate visualizations of highlighted sections (concept maps, diagrams, etc.)
+  - [ ] Prompt engineering for different highlight types (theory, method, result)
+- [ ] **ASCII/Text Abstraction**
+  - [ ] Generate ASCII/text-based visual summaries of entire papers
+  - [ ] Create section/flow diagrams and key findings in text format
+- [ ] **AI Tagging & Categorization**
+  - [ ] Auto-generate tags, categories, and summaries for each paper using AI
+  - [ ] Build a personalized taxonomy for neuroscience topics
+- [ ] **Graph-Based Reference Mapping**
+  - [ ] Create a graph-based map connecting papers by tags, citations, and content similarity
+  - [ ] Enable quick review and navigation between related papers
+- [ ] **Blog Publishing & Review**
+  - [ ] Publish posts with visualizations and summaries
+  - [ ] Support for comments, search, and cross-referencing (optional)
+
+---
+
 ## Phased Roadmap (2025 Blog)
 
 ## Deep Dive: Data Design for NeuroText Analyzer
