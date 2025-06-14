@@ -93,6 +93,14 @@ graph TD
 - **CloudWatch**: Monitoring and logging
 - **SageMaker**: (Optional) For hosting custom ML models
 
+### Additional Data & Analytics Technologies
+
+- **Cassandra:** Distributed NoSQL database for high-volume, scalable storage of appointment, customer, and business data, as well as time-series analytics.
+- **PostgreSQL:** Relational database for structured business data, advanced queries, and transactional integrity.
+- **TAO (Graph Database):** Native graph database for modeling and querying complex relationships in customer preferences, staff schedules, and business insights.
+- **Data Warehouse (Hive, ORC):** Scalable analytics and historical trend analysis using columnar storage and big data processing.
+- **Scuba:** Real-time analytics and ad-hoc querying for monitoring business operations, system performance, and interactive dashboards.
+
 ### Development & Deployment
 - **Docker**: Containerization for consistent environments
 - **GitHub Actions**: CI/CD pipeline

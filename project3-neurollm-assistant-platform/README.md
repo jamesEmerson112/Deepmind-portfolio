@@ -87,6 +87,14 @@ graph TD
 - **Recharts**: Dashboard analytics
 - **TailwindCSS**: Styling framework
 
+### Additional Data & Analytics Technologies
+
+- **Cassandra:** Distributed NoSQL database for high-volume, scalable storage of neuroscience and user data, as well as time-series analytics.
+- **PostgreSQL:** Relational database for structured platform data, advanced queries, and transactional integrity.
+- **TAO (Graph Database):** Native graph database for modeling and querying complex relationships in neuroscience knowledge, user profiles, and recommendations.
+- **Data Warehouse (Hive, ORC):** Scalable analytics and historical trend analysis using columnar storage and big data processing.
+- **Scuba:** Real-time analytics and ad-hoc querying for monitoring pipelines, system performance, and interactive dashboards.
+
 ## Core Components
 
 ### 1. Data Integration Layer

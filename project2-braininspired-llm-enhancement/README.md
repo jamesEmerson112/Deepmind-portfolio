@@ -81,6 +81,14 @@ graph TD
 - **Gradio/Streamlit**: Interactive demonstration interface
 - **Matplotlib/Plotly**: Visualization of performance metrics
 
+### Additional Data & Analytics Technologies
+
+- **Cassandra:** Distributed NoSQL database for high-volume, scalable storage of model data and time-series analytics.
+- **PostgreSQL:** Relational database for structured experiment data, advanced queries, and transactional integrity.
+- **TAO (Graph Database):** Native graph database for modeling and querying complex relationships between memory traces, attention mechanisms, and research findings.
+- **Data Warehouse (Hive, ORC):** Scalable analytics and historical trend analysis using columnar storage and big data processing.
+- **Scuba:** Real-time analytics and ad-hoc querying for monitoring pipelines, system performance, and interactive dashboards.
+
 ## Core Components
 
 ### 1. Hippocampal Indexing System

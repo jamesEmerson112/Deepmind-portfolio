@@ -46,36 +46,38 @@ To make this project approachable for new learners, the development is split int
 
 ### Phase 1: Core Paper Analysis Foundation (3-4 hours)
 
-**1. Project Setup & Environment**
-- Create a basic project structure with folders for code, data, and templates
-- Set up a Python virtual environment
-- Install dependencies: Flask, PyPDF2, openai, python-dotenv
-- Create a `.env` file for API keys and configuration
-- Configure a simple logging system
+#### TODO List
 
-**2. PDF Text Extraction Module**
-- Write a module to extract text from PDFs using PyPDF2
-- Extract metadata (author, title, date)
-- Attempt to split text by sections (abstract, methods, results, discussion)
-- Handle edge cases (multi-column, images, tables)
-- Include sample neuroscience papers for testing
+- [ ] **Project Setup & Environment**
+  - [ ] Create a basic project structure with folders for code, data, and templates
+  - [ ] Set up the Go backend in `BackEnd/` using Go modules
+  - [ ] Install dependencies: Gin, rsc.io/pdf or unidoc/unipdf, OpenAI Go client, AWS SDK for Go
+  - [ ] Create a `.env` file for API keys and configuration
+  - [ ] Configure a simple logging system
 
-**3. Basic LLM Integration**
-- Connect to OpenAI API (or local Llama)
-- Create a basic prompt template for extracting:
-  - Key brain regions
-  - Research methodologies
-  - Main findings
-  - Correlations between brain regions and functions
-- Process extracted text in manageable chunks
-- Parse LLM responses into structured data
+- [ ] **PDF Text Extraction Module**
+  - [ ] Write a module to extract text from PDFs using PyPDF2
+  - [ ] Extract metadata (author, title, date)
+  - [ ] Attempt to split text by sections (abstract, methods, results, discussion)
+  - [ ] Handle edge cases (multi-column, images, tables)
+  - [ ] Include sample neuroscience papers for testing
 
-**4. Simple Web Interface**
-- Build a Flask app with:
-  - Home page for PDF upload
-  - Results page to display analysis
-- Create basic HTML templates and CSS
-- Implement file upload and session management
+- [ ] **Basic LLM Integration**
+  - [ ] Connect to OpenAI API (or local Llama)
+  - [ ] Create a basic prompt template for extracting:
+    - [ ] Key brain regions
+    - [ ] Research methodologies
+    - [ ] Main findings
+    - [ ] Correlations between brain regions and functions
+  - [ ] Process extracted text in manageable chunks
+  - [ ] Parse LLM responses into structured data
+
+- [ ] **Simple Web Interface**
+  - [ ] Build a Flask app with:
+    - [ ] Home page for PDF upload
+    - [ ] Results page to display analysis
+  - [ ] Create basic HTML templates and CSS
+  - [ ] Implement file upload and session management
 
 **Phase 1 Deliverable:**
 A working local web app where users can upload a neuroscience PDF, view extracted text, and see a basic LLM-powered analysis.
@@ -84,28 +86,30 @@ A working local web app where users can upload a neuroscience PDF, view extracte
 
 ### Phase 2: Enhanced Analysis & AWS Integration (3-4 hours)
 
-**1. Improved LLM Prompting**
-- Create specialized prompts for different analysis types (brain regions, methods, findings)
-- Implement prompt chaining for progressive analysis
-- Add prompt versioning and evaluation
+#### TODO List
 
-**2. DynamoDB Integration**
-- Install and configure boto3
-- Write a module for DynamoDB CRUD operations
-- Design schema for storing entities and relationships
-- Add LocalStack configuration for local AWS emulation
+- [ ] **Improved LLM Prompting**
+  - [ ] Create specialized prompts for different analysis types (brain regions, methods, findings)
+  - [ ] Implement prompt chaining for progressive analysis
+  - [ ] Add prompt versioning and evaluation
 
-**3. Lambda Functions**
-- Create Lambda functions for:
-  - Text extraction
-  - LLM processing
-  - Visualization generation
-- Set up local Lambda testing and deployment packages
+- [ ] **DynamoDB Integration**
+  - [ ] Install and configure boto3
+  - [ ] Write a module for DynamoDB CRUD operations
+  - [ ] Design schema for storing entities and relationships
+  - [ ] Add LocalStack configuration for local AWS emulation
 
-**4. Step Functions Workflow**
-- Define a Step Functions state machine for the analysis pipeline
-- Implement error handling and retry logic
-- Visualize the workflow
+- [ ] **Lambda Functions**
+  - [ ] Create Lambda functions for:
+    - [ ] Text extraction
+    - [ ] LLM processing
+    - [ ] Visualization generation
+  - [ ] Set up local Lambda testing and deployment packages
+
+- [ ] **Step Functions Workflow**
+  - [ ] Define a Step Functions state machine for the analysis pipeline
+  - [ ] Implement error handling and retry logic
+  - [ ] Visualize the workflow
 
 **Phase 2 Deliverable:**
 An enhanced app with specialized LLM analysis, persistent storage in DynamoDB, and a serverless processing pipeline using AWS services (or LocalStack).
@@ -114,26 +118,28 @@ An enhanced app with specialized LLM analysis, persistent storage in DynamoDB, a
 
 ### Phase 3: Advanced Features & ML Integration (3-4 hours)
 
-**1. XGBoost Paper Classification**
-- Install scikit-learn, xgboost, pandas, numpy
-- Write feature extraction and classification modules
-- Create a labeled dataset and training pipeline
-- Integrate classification results into the main analysis
+#### TODO List
 
-**2. Enhanced Architecture Components**
-- Add SQS for paper processing requests and dead-letter queue
-- Implement Airflow DAGs for workflow orchestration and retraining
-- Set up Redshift (or PostgreSQL) for analytics storage and ETL
+- [ ] **XGBoost Paper Classification**
+  - [ ] Install scikit-learn, xgboost, pandas, numpy
+  - [ ] Write feature extraction and classification modules
+  - [ ] Create a labeled dataset and training pipeline
+  - [ ] Integrate classification results into the main analysis
 
-**3. Interactive Visualizations**
-- Install plotly and networkx
-- Build modules for relationship graphs and brain region visualization
-- Integrate interactive visualizations into the web interface
+- [ ] **Enhanced Architecture Components**
+  - [ ] Add SQS for paper processing requests and dead-letter queue
+  - [ ] Implement Airflow DAGs for workflow orchestration and retraining
+  - [ ] Set up Redshift (or PostgreSQL) for analytics storage and ETL
 
-**4. Comprehensive Docker Setup**
-- Create Dockerfiles for each component (web, lambda, ML)
-- Write a docker-compose.yml for the full stack (web, LocalStack, PostgreSQL, Airflow, Redis)
-- Add volume mounts, health checks, and monitoring
+- [ ] **Interactive Visualizations**
+  - [ ] Install plotly and networkx
+  - [ ] Build modules for relationship graphs and brain region visualization
+  - [ ] Integrate interactive visualizations into the web interface
+
+- [ ] **Comprehensive Docker Setup**
+  - [ ] Create Dockerfiles for each component (web, lambda, ML)
+  - [ ] Write a docker-compose.yml for the full stack (web, LocalStack, PostgreSQL, Airflow, Redis)
+  - [ ] Add volume mounts, health checks, and monitoring
 
 **Phase 3 Deliverable:**
 A production-ready NeuroText Analyzer with ML-powered classification, advanced data pipeline, rich visualizations, and a full Dockerized local development environment.
@@ -580,6 +586,14 @@ graph TD
 - CI/CD: GitHub Actions or AWS CodePipeline
 - LocalStack for local AWS emulation
 
+### Additional Data & Analytics Technologies
+
+- **Cassandra:** Distributed NoSQL database for high-volume, scalable storage of paper data and time-series analytics.
+- **PostgreSQL:** Relational database for structured neuroscience data, advanced queries, and transactional integrity.
+- **TAO (Graph Database):** Native graph database for modeling and querying complex relationships between brain regions, functions, and research findings.
+- **Data Warehouse (Hive, ORC):** Scalable analytics and historical trend analysis using columnar storage and big data processing.
+- **Scuba:** Real-time analytics and ad-hoc querying for monitoring pipelines, system performance, and interactive dashboards.
+
 ---
 
 ## Core Components
@@ -656,7 +670,7 @@ Output:
 ## Local Development Setup
 
 ### Prerequisites
-- Python 3.8+
+- Go 1.20+
 - Docker and Docker Compose
 - AWS CLI configured with appropriate credentials
 - OpenAI API key or local LLM setup
@@ -669,32 +683,37 @@ git clone <repository-url>
 cd project1-neurotext-analyzer
 ```
 
-2. Set up the local environment:
+2. Set up the Go backend:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+cd BackEnd
+go mod init neurotext-analyzer
+go get github.com/gin-gonic/gin
+go get github.com/unidoc/unipdf/v3 # or rsc.io/pdf
+go get github.com/sashabaranov/go-openai # or official OpenAI Go client
+go get github.com/aws/aws-sdk-go-v2
 ```
 
-3. Start LocalStack for AWS service emulation:
+3. Start the Go backend server:
+```bash
+go run main.go
+```
+The server will start on port 8080 by default.
+
+4. Start LocalStack for AWS service emulation:
 ```bash
 docker-compose up -d localstack
 ```
 
-4. Configure API keys:
+5. Configure API keys:
 ```bash
 cp .env.example .env
 # Edit .env with your API keys
 ```
 
-5. Initialize local DynamoDB tables:
+6. Initialize local DynamoDB tables (if needed, using Go or AWS CLI):
 ```bash
-python scripts/init_dynamodb.py
-```
-
-6. Run the application:
-```bash
-python app.py
+# Example using AWS CLI
+aws dynamodb create-table --cli-input-json file://dynamodb-table.json --endpoint-url http://localhost:4566
 ```
 
 ---
@@ -723,7 +742,14 @@ serverless deploy --stage prod
 
 ```
 project1-neurotext-analyzer/
-├── app.py                  # Main application entry point
+├── BackEnd/                # Go backend source code
+│   ├── main.go             # Main application entry point (Gin server)
+│   ├── go.mod              # Go module definition
+│   ├── handlers/           # API route handlers (planned)
+│   ├── models/             # Go data models (structs)
+│   ├── services/           # Business logic and integrations
+│   ├── config/             # Configuration files
+│   └── utils/              # Utility functions
 ├── infrastructure/         # AWS CDK/CloudFormation code
 ├── serverless.yml          # Serverless Framework configuration
 ├── config/                 # Configuration files
@@ -731,7 +757,7 @@ project1-neurotext-analyzer/
 ├── data/                   # Sample papers and datasets
 │   ├── papers/             # Example research papers
 │   └── processed/          # Processed outputs
-├── lambda/                 # Lambda function code
+├── lambda/                 # Lambda function code (legacy or for reference)
 │   ├── extraction/         # Text extraction function
 │   ├── processing/         # LLM processing function
 │   ├── visualization/      # Visualization generation function
@@ -739,7 +765,7 @@ project1-neurotext-analyzer/
 ├── models/                 # ML model definitions
 │   ├── paper_classifier/   # XGBoost model for paper classification
 │   └── entity_recognition/ # Custom NER models
-├── processors/             # Text processing modules
+├── processors/             # Text processing modules (legacy Python)
 │   ├── extraction.py       # PDF and text extraction
 │   ├── nlp.py              # NLP utilities
 │   └── llm.py              # LLM interaction
@@ -750,7 +776,6 @@ project1-neurotext-analyzer/
 ├── static/                 # Web assets
 ├── templates/              # Web interface templates
 ├── docker-compose.yml      # Docker composition for local development
-├── requirements.txt        # Python dependencies
 └── README.md               # This file
 ```
 
