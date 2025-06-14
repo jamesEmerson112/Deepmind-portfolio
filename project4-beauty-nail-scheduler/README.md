@@ -863,6 +863,46 @@ cd ../ai/lambda
 - Virtual nail design preview limited by image generation capabilities
 - No multi-location support in initial version
 
+## Enhanced Architecture (Learning Extensions)
+
+This project has been extended with enterprise data processing and analytics capabilities to demonstrate a production-grade appointment scheduling platform.
+
+### Enhanced Architecture Diagram
+
+```mermaid
+graph TD
+    A[Customer/Staff] --> B[React Frontend]
+    B --> C[API Gateway]
+    C --> D[Go Backend]
+    D --> E[SQS Command Queue]
+    E --> F[Lambda: Command Handlers]
+    F --> G[DynamoDB: Primary Data]
+    F --> H[SQS Notification Queue]
+    H --> I[Lambda: Notification Service]
+    J[Airflow DAG] -->|ETL Pipeline| K[Redshift Data Warehouse]
+    G --> J
+    K --> L[SageMaker: ML Models]
+    L --> M[Lambda: Recommendations]
+    M --> D
+    N[ECS: Analytics Dashboard] --> K
+```
+
+### Additional Technology Stack
+
+- **AWS SQS**: Enables decoupled, asynchronous communication between system components
+- **AWS Redshift**: Business intelligence data warehouse for appointment analytics
+- **Apache Airflow**: Orchestrates data workflows and business reporting processes
+- **Enhanced ML Capabilities**: Advanced prediction models for business optimization
+- **Docker & Docker Compose**: Containerizes all services (frontend, backend, ML, Airflow, LocalStack, Redshift emulation, etc.) for easy local development and deployment
+
+### Docker Implementation
+
+- Multi-stage Dockerfiles for optimized builds of each service (frontend, backend, ML, Airflow, etc.)
+- Docker Compose configuration to spin up the entire stack locally, including LocalStack for AWS emulation, PostgreSQL for Redshift, and Airflow
+- Volume mounts for persistent data and configuration
+- Health checks for service monitoring
+- GPU support for ML containers (if available)
+
 ## Future Enhancements
 
 1. **Payment Processing**: Integrate with payment gateways for deposits and full payments

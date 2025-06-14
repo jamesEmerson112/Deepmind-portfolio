@@ -1,10 +1,526 @@
 # NeuroText Analyzer
 
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Phased Learning Roadmap](#phased-learning-roadmap)
+  - [Phase 1: Core Paper Analysis Foundation](#phase-1-core-paper-analysis-foundation-3-4-hours)
+  - [Phase 2: Enhanced Analysis & AWS Integration](#phase-2-enhanced-analysis--aws-integration-3-4-hours)
+  - [Phase 3: Advanced Features & ML Integration](#phase-3-advanced-features--ml-integration-3-4-hours)
+- [Development Timeline](#development-timeline)
+- [Deep Dive: Data Design for NeuroText Analyzer](#deep-dive-data-design-for-neurotext-analyzer)
+  - [Core Data Models (Go Structs)](#1-core-data-models-go-structs)
+  - [Database Schema (DynamoDB)](#2-database-schema-dynamodb)
+  - [Data Processing Pipeline](#3-data-processing-pipeline)
+  - [LLM Prompting Strategy for Data Extraction](#4-llm-prompting-strategy-for-data-extraction)
+  - [API Contract](#5-api-contract)
+  - [Data for Visualizations](#6-data-for-visualizations)
+  - [Storage Design for Files](#7-storage-design-for-files)
+  - [React Component Data Flow](#8-react-component-data-flow)
+  - [Sample Visualization Data Flow](#9-sample-visualization-data-flow)
+  - [Data Evolution Considerations](#10-data-evolution-considerations)
+- [Architecture](#architecture)
+- [Technology Stack](#technology-stack)
+- [Core Components](#core-components)
+- [Use Cases](#use-cases)
+- [Local Development Setup](#local-development-setup)
+- [Deployment to AWS](#deployment-to-aws)
+- [Project Structure](#project-structure)
+- [Enhanced Architecture (Learning Extensions)](#enhanced-architecture-learning-extensions)
+- [Future Enhancements](#future-enhancements)
+- [Limitations](#limitations)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Project Overview
 
 **Development Time: 10 Hours**
 
+---
+
+## Phased Learning Roadmap
+
+To make this project approachable for new learners, the development is split into three progressive phases. Each phase is broken down into actionable steps and deliverables:
+
+---
+
+### Phase 1: Core Paper Analysis Foundation (3-4 hours)
+
+**1. Project Setup & Environment**
+- Create a basic project structure with folders for code, data, and templates
+- Set up a Python virtual environment
+- Install dependencies: Flask, PyPDF2, openai, python-dotenv
+- Create a `.env` file for API keys and configuration
+- Configure a simple logging system
+
+**2. PDF Text Extraction Module**
+- Write a module to extract text from PDFs using PyPDF2
+- Extract metadata (author, title, date)
+- Attempt to split text by sections (abstract, methods, results, discussion)
+- Handle edge cases (multi-column, images, tables)
+- Include sample neuroscience papers for testing
+
+**3. Basic LLM Integration**
+- Connect to OpenAI API (or local Llama)
+- Create a basic prompt template for extracting:
+  - Key brain regions
+  - Research methodologies
+  - Main findings
+  - Correlations between brain regions and functions
+- Process extracted text in manageable chunks
+- Parse LLM responses into structured data
+
+**4. Simple Web Interface**
+- Build a Flask app with:
+  - Home page for PDF upload
+  - Results page to display analysis
+- Create basic HTML templates and CSS
+- Implement file upload and session management
+
+**Phase 1 Deliverable:**
+A working local web app where users can upload a neuroscience PDF, view extracted text, and see a basic LLM-powered analysis.
+
+---
+
+### Phase 2: Enhanced Analysis & AWS Integration (3-4 hours)
+
+**1. Improved LLM Prompting**
+- Create specialized prompts for different analysis types (brain regions, methods, findings)
+- Implement prompt chaining for progressive analysis
+- Add prompt versioning and evaluation
+
+**2. DynamoDB Integration**
+- Install and configure boto3
+- Write a module for DynamoDB CRUD operations
+- Design schema for storing entities and relationships
+- Add LocalStack configuration for local AWS emulation
+
+**3. Lambda Functions**
+- Create Lambda functions for:
+  - Text extraction
+  - LLM processing
+  - Visualization generation
+- Set up local Lambda testing and deployment packages
+
+**4. Step Functions Workflow**
+- Define a Step Functions state machine for the analysis pipeline
+- Implement error handling and retry logic
+- Visualize the workflow
+
+**Phase 2 Deliverable:**
+An enhanced app with specialized LLM analysis, persistent storage in DynamoDB, and a serverless processing pipeline using AWS services (or LocalStack).
+
+---
+
+### Phase 3: Advanced Features & ML Integration (3-4 hours)
+
+**1. XGBoost Paper Classification**
+- Install scikit-learn, xgboost, pandas, numpy
+- Write feature extraction and classification modules
+- Create a labeled dataset and training pipeline
+- Integrate classification results into the main analysis
+
+**2. Enhanced Architecture Components**
+- Add SQS for paper processing requests and dead-letter queue
+- Implement Airflow DAGs for workflow orchestration and retraining
+- Set up Redshift (or PostgreSQL) for analytics storage and ETL
+
+**3. Interactive Visualizations**
+- Install plotly and networkx
+- Build modules for relationship graphs and brain region visualization
+- Integrate interactive visualizations into the web interface
+
+**4. Comprehensive Docker Setup**
+- Create Dockerfiles for each component (web, lambda, ML)
+- Write a docker-compose.yml for the full stack (web, LocalStack, PostgreSQL, Airflow, Redis)
+- Add volume mounts, health checks, and monitoring
+
+**Phase 3 Deliverable:**
+A production-ready NeuroText Analyzer with ML-powered classification, advanced data pipeline, rich visualizations, and a full Dockerized local development environment.
+
+---
+
+**Learning Path Between Phases:**
+- From Phase 1 to 2: Learn AWS basics, improve LLM prompting, understand serverless patterns
+- From Phase 2 to 3: Learn ML integration, message queuing, workflow orchestration, data visualization, and Docker
+
+**Suggested Timeline:**
+- Phase 1: 1 week (get a working prototype)
+- Phase 2: 1-2 weeks (add AWS and improve analysis)
+- Phase 3: 2-3 weeks (add advanced features and production-readiness)
+
+Each phase builds on the previous, ensuring incremental progress and a working system at every step.
+
+---
+
 This entry-level project combines LLMs with neuroscience by creating a specialized tool that analyzes neuroscience research papers and datasets. NeuroText Analyzer extracts key insights, findings, and relationships from neuroscience literature and presents them in an accessible format for researchers and students.
+
+---
+
+## Deep Dive: Data Design for NeuroText Analyzer
+
+### 1. Core Data Models (Go Structs)
+
+```go
+// Paper represents a scientific paper being analyzed
+type Paper struct {
+    ID          string    `json:"id" dynamodbav:"id"`
+    Title       string    `json:"title" dynamodbav:"title"`
+    Authors     []string  `json:"authors" dynamodbav:"authors"`
+    PublishDate time.Time `json:"publishDate" dynamodbav:"publishDate"`
+    Journal     string    `json:"journal" dynamodbav:"journal"`
+    UploadedAt  time.Time `json:"uploadedAt" dynamodbav:"uploadedAt"`
+    Status      string    `json:"status" dynamodbav:"status"` // processing, completed, failed
+    RawTextPath string    `json:"rawTextPath" dynamodbav:"rawTextPath"`
+    Sections    []Section `json:"sections" dynamodbav:"sections"`
+}
+
+// Section represents a logical section of a paper
+type Section struct {
+    ID      string `json:"id" dynamodbav:"id"`
+    PaperID string `json:"paperId" dynamodbav:"paperId"`
+    Title   string `json:"title" dynamodbav:"title"`
+    Type    string `json:"type" dynamodbav:"type"` // abstract, introduction, methods, results, discussion, etc.
+    Content string `json:"content" dynamodbav:"content"`
+    Order   int    `json:"order" dynamodbav:"order"`
+}
+
+// BrainRegion represents a brain area mentioned in a paper
+type BrainRegion struct {
+    ID          string   `json:"id" dynamodbav:"id"`
+    Name        string   `json:"name" dynamodbav:"name"`
+    Aliases     []string `json:"aliases" dynamodbav:"aliases"`
+    Description string   `json:"description" dynamodbav:"description"`
+    ParentID    string   `json:"parentId" dynamodbav:"parentId"` // For hierarchical relationships
+}
+
+// Function represents a neurological function or process
+type Function struct {
+    ID          string   `json:"id" dynamodbav:"id"`
+    Name        string   `json:"name" dynamodbav:"name"`
+    Description string   `json:"description" dynamodbav:"description"`
+    Categories  []string `json:"categories" dynamodbav:"categories"`
+}
+
+// Methodology represents a research method mentioned in papers
+type Methodology struct {
+    ID          string   `json:"id" dynamodbav:"id"`
+    Name        string   `json:"name" dynamodbav:"name"`
+    Description string   `json:"description" dynamodbav:"description"`
+    Categories  []string `json:"categories" dynamodbav:"categories"`
+}
+
+// Finding represents a scientific finding extracted from a paper
+type Finding struct {
+    ID            string    `json:"id" dynamodbav:"id"`
+    PaperID       string    `json:"paperId" dynamodbav:"paperId"`
+    Description   string    `json:"description" dynamodbav:"description"`
+    SectionID     string    `json:"sectionId" dynamodbav:"sectionId"`
+    BrainRegions  []string  `json:"brainRegions" dynamodbav:"brainRegions"`
+    Functions     []string  `json:"functions" dynamodbav:"functions"`
+    Methodologies []string  `json:"methodologies" dynamodbav:"methodologies"`
+    Confidence    float64   `json:"confidence" dynamodbav:"confidence"`
+    ExtractedAt   time.Time `json:"extractedAt" dynamodbav:"extractedAt"`
+}
+
+// Relationship represents a connection between entities
+type Relationship struct {
+    ID          string  `json:"id" dynamodbav:"id"`
+    SourceType  string  `json:"sourceType" dynamodbav:"sourceType"` // BrainRegion, Function, Methodology
+    SourceID    string  `json:"sourceId" dynamodbav:"sourceId"`
+    TargetType  string  `json:"targetType" dynamodbav:"targetType"`
+    TargetID    string  `json:"targetId" dynamodbav:"targetId"`
+    Type        string  `json:"type" dynamodbav:"type"` // causes, correlates_with, part_of, etc.
+    Description string  `json:"description" dynamodbav:"description"`
+    Strength    float64 `json:"strength" dynamodbav:"strength"` // 0.0 to 1.0
+    PaperIDs    []string `json:"paperIds" dynamodbav:"paperIds"` // Source papers for this relationship
+}
+
+// Analysis represents the complete analysis of a paper
+type Analysis struct {
+    ID            string    `json:"id" dynamodbav:"id"`
+    PaperID       string    `json:"paperId" dynamodbav:"paperId"`
+    Summary       string    `json:"summary" dynamodbav:"summary"`
+    KeyFindings   []string  `json:"keyFindings" dynamodbav:"keyFindings"`
+    BrainRegions  []string  `json:"brainRegions" dynamodbav:"brainRegions"`
+    Functions     []string  `json:"functions" dynamodbav:"functions"`
+    Methodologies []string  `json:"methodologies" dynamodbav:"methodologies"`
+    CompletedAt   time.Time `json:"completedAt" dynamodbav:"completedAt"`
+}
+```
+
+### 2. Database Schema (DynamoDB)
+
+- **Papers Table**: Partition Key: `id` (UUID)
+- **Sections Table**: Partition Key: `paperId` (UUID), Sort Key: `id` (UUID)
+- **BrainRegions Table**: Partition Key: `id` (UUID)
+- **Functions Table**: Partition Key: `id` (UUID)
+- **Methodologies Table**: Partition Key: `id` (UUID)
+- **Findings Table**: Partition Key: `paperId` (UUID), Sort Key: `id` (UUID)
+- **Relationships Table**: Partition Key: `sourceType#sourceId` (Composite), Sort Key: `targetType#targetId` (Composite)
+- **Analyses Table**: Partition Key: `paperId` (UUID)
+
+### 3. Data Processing Pipeline
+
+```mermaid
+graph TD
+    A[PDF Upload] --> B[Text Extraction]
+    B --> C[Section Identification]
+    C --> D[Entity Extraction with LLM]
+    D --> |Brain Regions| E[Brain Region Mapping]
+    D --> |Functions| F[Function Mapping]
+    D --> |Methodologies| G[Methodology Mapping]
+    D --> |Findings| H[Finding Extraction]
+    E & F & G --> I[Relationship Identification with LLM]
+    H & I --> J[Analysis Generation]
+    J --> K[Store Results in DynamoDB]
+    K --> L[Generate Visualizations]
+```
+
+#### ASCII Visualization
+
+```
++-------------------+
+|   PDF Upload      |
++-------------------+
+          |
+          v
++-------------------+
+| Text Extraction   |
++-------------------+
+          |
+          v
++---------------------------+
+| Section Identification    |
++---------------------------+
+          |
+          v
++---------------------------+
+| Entity Extraction (LLM)   |
++---------------------------+
+   |      |      |      |
+   v      v      v      v
+Brain  Func  Meth  Findings
+Reg.   tions odol.
+ |      |      |      |
+ +------+------+------+
+          |
+          v
++---------------------------+
+| Relationship Identification|
++---------------------------+
+          |
+          v
++-------------------+
+| Analysis Gen.     |
++-------------------+
+          |
+          v
++-------------------+
+| Store in DynamoDB |
++-------------------+
+          |
+          v
++-------------------+
+| Visualizations    |
++-------------------+
+```
+
+### 4. LLM Prompting Strategy for Data Extraction
+
+```go
+// Brain Region Extraction Prompt
+const brainRegionPrompt = `
+You are a neuroscience expert analyzing a research paper.
+Extract all brain regions mentioned in the following text.
+For each brain region, provide:
+1. The exact name as mentioned in the text
+2. Any aliases or alternative names mentioned
+3. A brief description of its function (if available in the text)
+
+Text: {{.Content}}
+
+Respond in the following JSON format only:
+{
+  "brainRegions": [
+    {
+      "name": "string",
+      "aliases": ["string"],
+      "description": "string"
+    }
+  ]
+}
+`
+```
+
+### 5. API Contract
+
+- **POST /api/papers**: Upload a new paper
+- **GET /api/papers**: List all papers
+- **GET /api/papers/:id**: Get paper details
+- **GET /api/papers/:id/status**: Get processing status
+- **DELETE /api/papers/:id**: Delete a paper
+- **GET /api/papers/:id/analysis**: Get complete analysis
+- **GET /api/papers/:id/brainregions**: Get brain regions
+- **GET /api/papers/:id/functions**: Get functions
+- **GET /api/papers/:id/methodologies**: Get methodologies
+- **GET /api/papers/:id/findings**: Get findings
+- **GET /api/papers/:id/relationships**: Get relationships
+- **GET /api/brainregions**: List all brain regions
+- **GET /api/brainregions/:id**: Get brain region details
+- **GET /api/brainregions/:id/functions**: Get functions related to a brain region
+- **GET /api/brainregions/:id/papers**: Get papers mentioning a brain region
+
+### 6. Data for Visualizations
+
+```go
+type NetworkNode struct {
+    ID    string `json:"id"`
+    Name  string `json:"name"`
+    Type  string `json:"type"`
+    Size  int    `json:"size"`
+    Group int    `json:"group"`
+}
+
+type NetworkLink struct {
+    Source   string  `json:"source"`
+    Target   string  `json:"target"`
+    Type     string  `json:"type"`
+    Strength float64 `json:"strength"`
+}
+
+type NetworkGraph struct {
+    Nodes []NetworkNode `json:"nodes"`
+    Links []NetworkLink `json:"links"`
+}
+
+type BrainRegionHeatmapData struct {
+    RegionID   string  `json:"regionId"`
+    RegionName string  `json:"regionName"`
+    Intensity  float64 `json:"intensity"`
+    X          float64 `json:"x"`
+    Y          float64 `json:"y"`
+    Z          float64 `json:"z"`
+}
+
+type MatrixCell struct {
+    BrainRegionID string  `json:"brainRegionId"`
+    FunctionID    string  `json:"functionId"`
+    Strength      float64 `json:"strength"`
+}
+
+type MatrixData struct {
+    BrainRegions []string    `json:"brainRegions"`
+    Functions    []string    `json:"functions"`
+    Cells        []MatrixCell `json:"cells"`
+}
+```
+
+### 7. Storage Design for Files
+
+```
+/storage
+  /papers
+    /{paper-id}/
+      - original.pdf
+      - extracted_text.txt
+      - metadata.json
+      /sections/
+        - abstract.txt
+        - introduction.txt
+        - methods.txt
+        - results.txt
+        - discussion.txt
+      /analysis/
+        - brain_regions.json
+        - functions.json
+        - methodologies.json
+        - findings.json
+        - relationships.json
+        - complete_analysis.json
+```
+
+### 8. React Component Data Flow
+
+```mermaid
+graph TD
+    A[App Component] --> B[Paper Upload Component]
+    A --> C[Paper List Component]
+    A --> D[Analysis View Component]
+    D --> E[Paper Details Component]
+    D --> F[Entity List Component]
+    D --> G[Visualization Component]
+    G --> H[Network Graph Component]
+    G --> I[Brain Region Heatmap Component]
+    G --> J[Function Matrix Component]
+```
+
+#### ASCII Visualization
+
+```
++-------------------+
+|   App Component   |
++-------------------+
+    |     |     |
+    v     v     v
+Upload  List  Analysis
+Comp.   Comp. View Comp.
+                |
+                v
+        +-------------------+
+        |  Analysis View    |
+        +-------------------+
+         |     |      |
+         v     v      v
+   Details  Entity  Visualization
+   Comp.    List    Comp.
+                   |
+                   v
+        +-------------------+
+        | Visualization     |
+        +-------------------+
+         |   |   |
+         v   v   v
+      Net  Heat  Matrix
+      Graph Map  Comp.
+```
+
+### 9. Sample Visualization Data Flow
+
+#### ASCII Visualization
+
+```
+[User]
+   |
+   v
+[Select Paper]
+   |
+   v
+[Frontend] --(GET /api/papers/:id/relationships)--> [Backend]
+   |
+   v
+[Receive Relationship Data]
+   |
+   v
+[Transform to NetworkGraph Format]
+   |
+   v
+[Render Visualization (D3.js, etc.)]
+```
+
+1. User selects a paper
+2. Frontend requests `/api/papers/:id/relationships`
+3. Backend returns relationship data
+4. Frontend transforms this data into the NetworkGraph format
+5. Visualization component renders the network using D3.js or similar
+
+### 10. Data Evolution Considerations
+
+- **Phase 1**: Focus on Paper, Section, and basic Analysis models
+- **Phase 2**: Add BrainRegion, Function, Methodology, Finding, and Relationship models
+- **Phase 3**: Extend with more specialized data structures for ML and visualization
+
+---
 
 ## Development Timeline
 
@@ -17,6 +533,8 @@ This entry-level project combines LLMs with neuroscience by creating a specializ
 | ML Feature Development | 1 hour | Implementing XGBoost for paper classification |
 | Visualization | 1 hour | Implementing basic visualization of relationships |
 | Web Interface | 1 hour | Building a simple interface for paper analysis |
+
+---
 
 ## Architecture
 
@@ -37,36 +555,32 @@ graph TD
     K[SageMaker Endpoint] -->|Custom NLP Model| C
 ```
 
+---
+
 ## Technology Stack
 
-### AWS Services
-- **AWS Lambda**: Serverless functions for text extraction, processing, and analysis
-- **AWS DynamoDB**: NoSQL database for storing entities, relationships, and insights
-- **AWS Step Functions**: Workflow orchestration for the analysis pipeline
-- **AWS SageMaker**: Hosting custom NLP models fine-tuned for neuroscience
-- **AWS API Gateway**: REST API endpoints for the web interface
+### Backend (Go)
+- Web Framework: Gin, Echo, or Fiber
+- PDF Processing: rsc.io/pdf or github.com/unidoc/unipdf
+- OpenAI Integration: Official Go client or LangChainGo
+- Logging: logrus or zap
+- Database: DynamoDB (AWS SDK for Go)
+- AWS SDK: Lambda, Step Functions
 
-### LLM Technologies
-- **OpenAI API/Llama**: Foundation model for text understanding and analysis
-- **Specialized Prompt Templates**: Custom prompts designed for neuroscience domain
-- **Langchain**: Framework for chaining LLM operations together
+### Frontend (React)
+- UI Framework: Material-UI, Chakra UI, or Ant Design
+- State Management: Redux, Context API, or Zustand
+- Visualization Libraries: D3.js, Plotly.js, or React-Vis
+- API Client: Axios, Fetch API, or React Query
+- PDF Viewer: React-pdf or similar
 
-### ML & Data Processing
-- **XGBoost**: Classification of papers into neuroscience subdomains
-- **PyPDF2/PDFMiner**: Extraction of text from research papers
-- **NLTK/spaCy**: NLP processing for entity recognition
-- **Pandas**: Data organization and manipulation
-- **MLflow**: Tracking performance of prompt templates and extraction methods
+### DevOps/Infrastructure
+- Docker setup for Go and React
+- AWS deployment (ECS, EKS, Lambda)
+- CI/CD: GitHub Actions or AWS CodePipeline
+- LocalStack for local AWS emulation
 
-### Development & Deployment
-- **Docker**: Containerization for consistent environments
-- **LocalStack**: Local AWS service emulation for development
-- **GitHub Actions**: CI/CD pipeline for deployment
-
-### Visualization & Interface
-- **Plotly/D3.js**: Interactive visualization of relationships
-- **Flask/Streamlit**: Simple web interface
-- **Bootstrap**: Basic styling for the web interface
+---
 
 ## Core Components
 
@@ -99,6 +613,8 @@ graph TD
 - Relationship network visualization
 - Finding summary cards
 - Serverless architecture using Lambda and API Gateway
+
+---
 
 ## Use Cases
 
@@ -134,6 +650,8 @@ Output:
 - Key studies and their methodologies
 - Simplified explanation for educational purposes
 ```
+
+---
 
 ## Local Development Setup
 
@@ -179,6 +697,8 @@ python scripts/init_dynamodb.py
 python app.py
 ```
 
+---
+
 ## Deployment to AWS
 
 ### Infrastructure as Code Deployment
@@ -196,6 +716,8 @@ cdk deploy
 ```bash
 serverless deploy --stage prod
 ```
+
+---
 
 ## Project Structure
 
@@ -232,6 +754,53 @@ project1-neurotext-analyzer/
 └── README.md               # This file
 ```
 
+---
+
+## Enhanced Architecture (Learning Extensions)
+
+This project has been extended with additional AWS services and data processing technologies to demonstrate a more comprehensive, production-ready architecture.
+
+### Enhanced Architecture Diagram
+
+```mermaid
+graph TD
+    A[Neuroscience Paper/Dataset] --> B[S3 Data Lake]
+    B --> C[SQS Processing Queue]
+    C --> D[Lambda: Text Extraction]
+    D --> E[Lambda: LLM Processing]
+    E --> F[DynamoDB: Knowledge Storage]
+    G[Airflow DAG] -->|Orchestration| B
+    G -->|Monitoring| C
+    G -->|Manages| D
+    G -->|Manages| E
+    H[Redshift] <-->|Analytics Storage| F
+    I[Lambda: Analytics] --> H
+    J[XGBoost on SageMaker] --> F
+    K[Step Functions] -->|Process Control| G
+```
+
+---
+
+### Additional Technology Stack
+
+- **AWS SQS**: Manages document processing workloads with queues for incoming analysis requests and failure handling
+- **AWS Redshift**: Data warehouse for storing and analyzing extracted neuroscience knowledge at scale
+- **Apache Airflow**: Orchestrates complex document processing workflows with DAGs for pipeline management
+- **Enhanced ML Pipeline**: Improved model deployment and management on SageMaker
+- **Docker & Docker Compose**: Containerizes all services (web, ML, Airflow, LocalStack, Redshift emulation, etc.) for easy local development and deployment
+
+---
+
+### Docker Implementation
+
+- Multi-stage Dockerfiles for optimized builds of each service (web, ML, Lambda, Airflow, etc.)
+- Docker Compose configuration to spin up the entire stack locally, including LocalStack for AWS emulation, PostgreSQL for Redshift, and Airflow
+- Volume mounts for persistent data and configuration
+- Health checks for service monitoring
+- GPU support for ML containers (if available)
+
+---
+
 ## Future Enhancements
 
 1. Integration with research paper databases (PubMed, etc.)
@@ -241,6 +810,8 @@ project1-neurotext-analyzer/
 5. Fine-tuning on neuroscience-specific corpus using SageMaker
 6. Auto-scaling Lambda functions for high-volume processing
 
+---
+
 ## Limitations
 
 - The analysis depends on the LLM's understanding of neuroscience concepts
@@ -248,9 +819,13 @@ project1-neurotext-analyzer/
 - Limited to text analysis (doesn't process images, graphs, or tables in papers)
 - Not a replacement for expert human analysis
 
+---
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
 
 ## Acknowledgments
 

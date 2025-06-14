@@ -360,6 +360,46 @@ This project draws inspiration from several neuroscience concepts:
 - Requires fine-tuning to adapt to specific domains
 - AWS infrastructure adds deployment complexity
 
+## Enhanced Architecture (Learning Extensions)
+
+This project incorporates additional cloud and data technologies to create a more robust, production-ready architecture for brain-inspired LLM enhancements.
+
+### Enhanced Architecture Diagram
+
+```mermaid
+graph TD
+    A[Input Query] --> B[SQS Query Queue]
+    B --> C[Context Router Lambda]
+    C --> D[DynamoDB: Episodic Memory]
+    C --> E[Lambda: Memory Indexing]
+    F[Airflow DAG] -->|Training Pipeline| G[SageMaker Training Jobs]
+    G --> H[SageMaker Model Endpoints]
+    H <--> I[Lambda: Enhanced Attention]
+    I --> J[Output Generation]
+    K[Random Forest/XGBoost] --> L[Lambda: Classification]
+    L --> I
+    M[Redshift] <-- N[ETL Lambda]
+    D --> N
+    M --> O[Performance Analysis]
+    P[Step Functions] -->|Orchestration| F
+```
+
+### Additional Technology Stack
+
+- **AWS SQS**: Manages asynchronous request processing and task distribution
+- **AWS Redshift**: Data warehouse for storing and analyzing model performance metrics
+- **Apache Airflow**: Orchestrates complex model training and evaluation workflows
+- **Enhanced ML Pipeline**: Advanced model training and deployment with automated evaluation
+- **Docker & Docker Compose**: Containerizes all services (LLM, memory, Airflow, LocalStack, Redshift emulation, etc.) for easy local development and deployment
+
+### Docker Implementation
+
+- Multi-stage Dockerfiles for optimized builds of each service (LLM, memory, Airflow, etc.)
+- Docker Compose configuration to spin up the entire stack locally, including LocalStack for AWS emulation, PostgreSQL for Redshift, and Airflow
+- Volume mounts for persistent data and configuration
+- Health checks for service monitoring
+- GPU support for ML containers (if available)
+
 ## Future Enhancements
 
 1. Integration with retrieval-augmented generation systems

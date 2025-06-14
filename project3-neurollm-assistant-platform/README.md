@@ -492,6 +492,47 @@ The NeuroLLM Assistant Platform incorporates several ethical safeguards:
 - Recommendations are suggestions, not prescriptions
 - AWS infrastructure adds deployment complexity and cost considerations
 
+## Enhanced Architecture (Learning Extensions)
+
+This project has been extended with enterprise-grade data processing and analytics capabilities to create a comprehensive, production-ready platform.
+
+### Enhanced Architecture Diagram
+
+```mermaid
+graph TD
+    A[Neuroscience Data Sources] --> B[S3 Data Lake]
+    B --> C[SQS Processing Queue]
+    C --> D[Lambda: Preprocessing]
+    D --> E[Airflow ETL Pipeline]
+    E --> F[Redshift Data Warehouse]
+    E --> G[Neptune Knowledge Graph]
+    F --> H[SageMaker Models: XGBoost/Random Forest]
+    G --> H
+    H --> I[ECS: Recommendation Engine]
+    I --> J[SQS Notification Queue]
+    J --> K[Lambda: Notification Service]
+    L[Frontend] --> M[API Gateway]
+    M --> N[Lambda: API Service]
+    N --> I
+    O[Step Functions] -->|Orchestration| E
+```
+
+### Additional Technology Stack
+
+- **AWS SQS**: Manages asynchronous processing and communication between components
+- **AWS Redshift**: Enterprise data warehouse for comprehensive analytics
+- **Apache Airflow**: Orchestrates complex data processing and ETL workflows
+- **Enhanced ECS Implementation**: Expanded containerized services with auto-scaling
+- **Docker & Docker Compose**: Containerizes all services (frontend, backend, ML, Airflow, LocalStack, Redshift emulation, etc.) for easy local development and deployment
+
+### Docker Implementation
+
+- Multi-stage Dockerfiles for optimized builds of each service (frontend, backend, ML, Airflow, etc.)
+- Docker Compose configuration to spin up the entire stack locally, including LocalStack for AWS emulation, PostgreSQL for Redshift, and Airflow
+- Volume mounts for persistent data and configuration
+- Health checks for service monitoring
+- GPU support for ML containers (if available)
+
 ## Future Enhancements
 
 1. Integration with real-time neural monitoring devices

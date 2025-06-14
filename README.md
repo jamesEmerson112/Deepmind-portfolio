@@ -104,17 +104,28 @@ The four projects represent a natural progression in complexity, development eff
 - **DynamoDB**: For flexible, scalable data storage
 - **Step Functions**: For orchestrating complex workflows
 - **CloudWatch**: For monitoring and observability
+- **SQS**: For message queuing and asynchronous processing
+- **Redshift**: For data warehousing and analytics
+- **ECS**: For container orchestration and scaling
 
 ### ML & Data Science
 - **XGBoost/Random Forest**: For classification and anomaly detection
 - **MLflow**: For experiment tracking and model registry
 - **LLM Integration**: Using various LLM models across all projects
 
+### Data Pipeline & Orchestration
+- **Apache Airflow**: For complex workflow orchestration and ETL processes
+- **ETL Pipelines**: For data transformation and loading into warehouses
+
 ### Development & Deployment
-- **Docker**: For containerization and consistent environments
+- **Docker & Docker Compose**: For containerization and consistent environments, including multi-service orchestration for local development and deployment
 - **LocalStack**: For local AWS service emulation
 - **GitHub Actions**: For CI/CD pipelines
 - **Infrastructure as Code**: Using AWS CDK or Terraform
+
+## Learning Extensions
+
+All projects have been enhanced with additional AWS services and data engineering technologies for learning purposes. Each project README includes an "Enhanced Architecture" section with a detailed Mermaid diagram and Docker implementation notes, demonstrating how to build scalable, production-grade cloud solutions.
 
 ## Getting Started
 
