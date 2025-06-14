@@ -1,6 +1,6 @@
 # DeepMind Portfolio
 
-This repository contains three project concepts that combine LLMs with neuroscience, showcasing progressive levels of complexity and development effort. Each project demonstrates different approaches to integrating AI with neuroscience principles, from text analysis to neural architecture enhancements to personalized cognitive applications, all leveraging AWS cloud services and advanced ML technologies.
+This repository contains four projects that showcase progressive levels of complexity and development effort. The first three combine LLMs with neuroscience, demonstrating different approaches to integrating AI with neuroscience principles. The fourth project applies LLM capabilities to a practical business application - a nail beauty shop appointment scheduler. All projects leverage AWS cloud services and advanced ML technologies to demonstrate real-world applications of AI.
 
 ## Projects Overview
 
@@ -63,15 +63,38 @@ A comprehensive platform that combines LLMs with neuroscience data analysis to p
 
 [View Project Details](./project3-neurollm-assistant-platform)
 
+### [Project 4: Beauty Nail Shop Appointment Scheduler](./project4-beauty-nail-scheduler)
+
+A comprehensive web application for scheduling appointments at a nail beauty shop, enhanced with LLM-powered features for intelligent customer interaction and business optimization.
+
+**Development Time:** 30 Hours
+**Complexity Level:** Advanced
+
+**Key Technologies:**
+- **React** for modern, responsive frontend UI
+- **Go (Golang)** for high-performance backend API
+- **AWS DynamoDB** for scalable database storage
+- **AWS Lambda** for serverless AI processing
+- **AWS Cognito** for authentication and user management
+- **OpenAI API/Self-hosted LLM** for intelligent features
+- **LangChain/LlamaIndex** for LLM application framework
+- **Gin/Echo** Go web framework for RESTful APIs
+- **Docker** for containerization and deployment
+- **AWS CDK** for infrastructure as code
+
+[View Project Details](./project4-beauty-nail-scheduler)
+
 ## Project Progression
 
-The three projects represent a natural progression in complexity and development effort, all leveraging AWS cloud services and ML technologies:
+The four projects represent a natural progression in complexity, development effort, and practical application of AI technologies:
 
 1. **Project 1 (10 hours)** uses serverless Lambda functions and DynamoDB to create a scalable system for analyzing neuroscience texts with LLMs, representing an entry point into combining these technologies.
 
 2. **Project 2 (20 hours)** goes deeper by deploying modified LLM architectures on SageMaker with neuroscience-inspired memory systems in DynamoDB, implementing brain-inspired memory and attention mechanisms within a cloud-native architecture.
 
-3. **Project 3 (30 hours)** represents the most advanced integration, with a comprehensive AWS architecture using SageMaker, Neptune, ECS, and Step Functions to create a complete platform that processes neural data through LLMs and ML models to provide actionable insights.
+3. **Project 3 (30 hours)** represents an advanced integration within the neuroscience domain, with a comprehensive AWS architecture using SageMaker, Neptune, ECS, and Step Functions to create a complete platform that processes neural data through LLMs and ML models to provide actionable insights.
+
+4. **Project 4 (30 hours)** applies the LLM integration skills to a practical business domain, creating a complete appointment scheduling application for a nail beauty shop. This project demonstrates how LLMs can enhance traditional web applications by adding intelligent conversation capabilities, personalized recommendations, and natural language processing of complex user requests, all built with a high-performance Go backend and React frontend.
 
 ## Common Technology Stack Across Projects
 
