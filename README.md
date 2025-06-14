@@ -1,6 +1,6 @@
 # DeepMind Portfolio
 
-This repository contains four projects that showcase progressive levels of complexity and development effort. The first three combine LLMs with neuroscience, demonstrating different approaches to integrating AI with neuroscience principles. The fourth project applies LLM capabilities to a practical business application - a nail beauty shop appointment scheduler. All projects leverage AWS cloud services and advanced ML technologies to demonstrate real-world applications of AI.
+This repository contains five projects that showcase progressive levels of complexity and development effort. The first three combine LLMs with neuroscience, demonstrating different approaches to integrating AI with neuroscience principles. The fourth project applies LLM capabilities to a practical business application - a nail beauty shop appointment scheduler. The fifth project demonstrates a full-stack, AI-powered platform for orchard farm management, integrating IoT, ML, and advanced web technologies. All projects leverage AWS cloud services and advanced ML technologies to demonstrate real-world applications of AI.
 
 ## Projects Overview
 
@@ -84,9 +84,32 @@ A comprehensive web application for scheduling appointments at a nail beauty sho
 
 [View Project Details](./project4-beauty-nail-scheduler)
 
+### [Project 5: OrchardHub – Smart Orchard Management Platform](./project5-orchardhub)
+
+A full-stack, AI-powered platform for orchard farm management, integrating modern web technologies, IoT sensor data, machine learning, and advanced analytics. OrchardHub serves both customers and farm operators, providing a responsive website, inventory and harvest management, crop forecasting, customer ordering, and a comprehensive analytics dashboard.
+
+**Development Time:** 34 Hours
+**Complexity Level:** Advanced
+
+**Key Technologies:**
+- **React** for frontend UI and dashboards
+- **Go (Golang)** for high-performance backend API
+- **AWS DynamoDB** for scalable data storage
+- **AWS Lambda** for serverless ML and IoT processing
+- **AWS SageMaker** for crop prediction and analytics
+- **AWS Cognito** for authentication
+- **OpenAI API/LangChain/LlamaIndex** for LLM-powered features
+- **XGBoost** for yield prediction and anomaly detection
+- **IoT Core** for sensor integration
+- **D3.js/Recharts** for data visualization
+- **Docker** and **LocalStack** for local development
+- **AWS CDK** for infrastructure as code
+
+[View Project Details](./project5-orchardhub)
+
 ## Project Progression
 
-The four projects represent a natural progression in complexity, development effort, and practical application of AI technologies:
+The five projects represent a natural progression in complexity, development effort, and practical application of AI technologies:
 
 1. **Project 1 (10 hours)** uses serverless Lambda functions and DynamoDB to create a scalable system for analyzing neuroscience texts with LLMs, representing an entry point into combining these technologies.
 
@@ -95,6 +118,8 @@ The four projects represent a natural progression in complexity, development eff
 3. **Project 3 (30 hours)** represents an advanced integration within the neuroscience domain, with a comprehensive AWS architecture using SageMaker, Neptune, ECS, and Step Functions to create a complete platform that processes neural data through LLMs and ML models to provide actionable insights.
 
 4. **Project 4 (30 hours)** applies the LLM integration skills to a practical business domain, creating a complete appointment scheduling application for a nail beauty shop. This project demonstrates how LLMs can enhance traditional web applications by adding intelligent conversation capabilities, personalized recommendations, and natural language processing of complex user requests, all built with a high-performance Go backend and React frontend.
+
+5. **Project 5 (34 hours)** is the most advanced, combining all previous skills to build a full-stack, AI-powered orchard management platform. It integrates IoT sensor data, machine learning for crop forecasting, LLM-powered customer support, and advanced analytics, providing a real-world example of how modern AI and cloud technologies can transform traditional industries.
 
 ## Common Technology Stack Across Projects
 
