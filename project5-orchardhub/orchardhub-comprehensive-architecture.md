@@ -1,0 +1,592 @@
+# OrchardHub Comprehensive System Architecture
+
+## Complete System Overview
+
+```mermaid
+graph TB
+    %% User Interface Layer
+    subgraph "User Interface Layer"
+        UI_Customer[Customer Portal<br/>React + Tailwind CSS]
+        UI_Staff[Farm Staff Dashboard<br/>React + Tailwind CSS]
+        UI_Admin[Admin Dashboard<br/>React + Tailwind CSS]
+        UI_Mobile[Mobile App<br/>React Native]
+    end
+
+    %% API Gateway
+    subgraph "API Layer"
+        API_Gateway[API Gateway<br/>Go + Gin Framework]
+        Auth[JWT Authentication<br/>Middleware]
+        API_Customer[Customer APIs]
+        API_Farm[Farm Management APIs]
+        API_Admin[Admin APIs]
+    end
+
+    %% Core Backend Services
+    subgraph "Backend Services"
+        Service_Product[Product Service<br/>Go]
+        Service_Order[Order Service<br/>Go]
+        Service_Inventory[Inventory Service<br/>Go]
+        Service_User[User Service<br/>Go]
+        Service_Task[Task Service<br/>Go]
+        Service_Visit[Visit Service<br/>Go]
+        Service_Analytics[Analytics Service<br/>Go]
+    end
+
+    %% Data Storage Layer
+    subgraph "Data Storage"
+        DDB_Products[(DynamoDB<br/>Products)]
+        DDB_Users[(DynamoDB<br/>Users)]
+        DDB_Orders[(DynamoDB<br/>Orders)]
+        DDB_Inventory[(DynamoDB<br/>Inventory)]
+        DDB_Sensors[(DynamoDB<br/>SensorData)]
+        DDB_Tasks[(DynamoDB<br/>Tasks)]
+        DDB_Weather[(DynamoDB<br/>WeatherData)]
+        DDB_Predictions[(DynamoDB<br/>YieldPredictions)]
+        DDB_Visits[(DynamoDB<br/>Visits)]
+        Redis[Redis Cache]
+        S3_Storage[S3 Buckets<br/>Images/Files]
+    end
+
+    %% IoT and Real-time Processing
+    subgraph "IoT & Real-time"
+        IoT_Sensors[IoT Sensors<br/>Soil/Temp/Humidity]
+        IoT_Core[AWS IoT Core]
+        Lambda_IoT[Lambda<br/>Sensor Processing]
+        Stream_Kinesis[Kinesis<br/>Data Streams]
+    end
+
+    %% ML/AI Pipeline
+    subgraph "ML/AI Pipeline"
+        Lambda_DataPrep[Lambda<br/>ML Data Prep]
+        S3_Training[S3<br/>Training Data]
+        SageMaker_Train[SageMaker<br/>Training Jobs]
+        SageMaker_Model[SageMaker<br/>Model Endpoints]
+        XGBoost[XGBoost Models<br/>Yield Prediction]
+        Lambda_Predict[Lambda<br/>Prediction Service]
+    end
+
+    %% LLM Integration
+    subgraph "LLM Services"
+        OpenAI[OpenAI API]
+        LangChain[LangChain<br/>Framework]
+        Lambda_Chat[Lambda<br/>Chatbot Service]
+        Lambda_Content[Lambda<br/>Content Generation]
+        Lambda_NLP[Lambda<br/>NLP Query Service]
+    end
+
+    %% External Integrations
+    subgraph "External Services"
+        Weather_API[Weather API]
+        Payment_Gateway[Payment Gateway]
+        Maps_Service[Maps Service]
+        SMS_Service[SMS Service]
+    end
+
+    %% Processing & Orchestration
+    subgraph "Processing Layer"
+        StepFunctions[Step Functions<br/>Workflow Orchestration]
+        Lambda_Weather[Lambda<br/>Weather Processing]
+        Lambda_Notify[Lambda<br/>Notifications]
+        SNS[SNS<br/>Email/SMS]
+        EventBridge[EventBridge<br/>Event Bus]
+    end
+
+    %% Monitoring & DevOps
+    subgraph "DevOps & Monitoring"
+        CloudWatch[CloudWatch<br/>Monitoring]
+        XRay[X-Ray<br/>Tracing]
+        GitHub_Actions[GitHub Actions<br/>CI/CD]
+        Docker[Docker<br/>Containers]
+    end
+
+    %% User Flows
+    UI_Customer --> API_Gateway
+    UI_Staff --> API_Gateway
+    UI_Admin --> API_Gateway
+    UI_Mobile --> API_Gateway
+
+    API_Gateway --> Auth
+    Auth --> API_Customer
+    Auth --> API_Farm
+    Auth --> API_Admin
+
+    %% Customer Journey
+    API_Customer --> Service_Product
+    API_Customer --> Service_Order
+    API_Customer --> Service_Visit
+    Service_Product --> DDB_Products
+    Service_Order --> DDB_Orders
+    Service_Visit --> DDB_Visits
+
+    %% Farm Staff Journey
+    API_Farm --> Service_Inventory
+    API_Farm --> Service_Task
+    Service_Inventory --> DDB_Inventory
+    Service_Task --> DDB_Tasks
+
+    %% Admin Journey
+    API_Admin --> Service_Analytics
+    API_Admin --> Service_User
+    Service_Analytics --> DDB_Orders
+    Service_Analytics --> DDB_Products
+    Service_User --> DDB_Users
+
+    %% Caching
+    Service_Product --> Redis
+    Service_Inventory --> Redis
+    Redis --> DDB_Products
+    Redis --> DDB_Inventory
+
+    %% File Storage
+    Service_Product --> S3_Storage
+    Service_User --> S3_Storage
+
+    %% IoT Data Flow
+    IoT_Sensors --> IoT_Core
+    IoT_Core --> Lambda_IoT
+    Lambda_IoT --> Stream_Kinesis
+    Stream_Kinesis --> DDB_Sensors
+    Lambda_IoT --> EventBridge
+
+    %% Weather Integration
+    Weather_API --> Lambda_Weather
+    Lambda_Weather --> DDB_Weather
+    Lambda_Weather --> EventBridge
+
+    %% ML Pipeline
+    DDB_Sensors --> Lambda_DataPrep
+    DDB_Weather --> Lambda_DataPrep
+    Lambda_DataPrep --> S3_Training
+    S3_Training --> SageMaker_Train
+    SageMaker_Train --> SageMaker_Model
+    SageMaker_Model --> XGBoost
+    XGBoost --> Lambda_Predict
+    Lambda_Predict --> DDB_Predictions
+
+    %% LLM Integration
+    API_Customer --> Lambda_Chat
+    Lambda_Chat --> LangChain
+    LangChain --> OpenAI
+    Lambda_Content --> OpenAI
+    Lambda_NLP --> OpenAI
+    Service_Product --> Lambda_Content
+    Service_Analytics --> Lambda_NLP
+
+    %% Orchestration
+    EventBridge --> StepFunctions
+    StepFunctions --> Lambda_Predict
+    StepFunctions --> Service_Task
+    StepFunctions --> Lambda_Notify
+    Lambda_Notify --> SNS
+
+    %% External Services
+    Service_Order --> Payment_Gateway
+    Service_Visit --> Maps_Service
+    SNS --> SMS_Service
+
+    %% Monitoring
+    API_Gateway --> CloudWatch
+    Lambda_IoT --> CloudWatch
+    Service_Product --> XRay
+    GitHub_Actions --> Docker
+
+    %% Styling
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef backend fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef database fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef ml fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef iot fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef external fill:#f5f5f5,stroke:#424242,stroke-width:2px
+    classDef processing fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px
+
+    class UI_Customer,UI_Staff,UI_Admin,UI_Mobile frontend
+    class API_Gateway,Auth,API_Customer,API_Farm,API_Admin,Service_Product,Service_Order,Service_Inventory,Service_User,Service_Task,Service_Visit,Service_Analytics backend
+    class DDB_Products,DDB_Users,DDB_Orders,DDB_Inventory,DDB_Sensors,DDB_Tasks,DDB_Weather,DDB_Predictions,DDB_Visits,Redis,S3_Storage database
+    class Lambda_DataPrep,S3_Training,SageMaker_Train,SageMaker_Model,XGBoost,Lambda_Predict,OpenAI,LangChain,Lambda_Chat,Lambda_Content,Lambda_NLP ml
+    class IoT_Sensors,IoT_Core,Lambda_IoT,Stream_Kinesis iot
+    class Weather_API,Payment_Gateway,Maps_Service,SMS_Service external
+    class StepFunctions,Lambda_Weather,Lambda_Notify,SNS,EventBridge,CloudWatch,XRay,GitHub_Actions,Docker processing
+```
+
+## Data Model Relationships
+
+```mermaid
+erDiagram
+    User ||--o{ Order : places
+    User ||--o{ Visit : books
+    User ||--o{ Task : assigned_to
+    User {
+        string id PK
+        string email UK
+        string name
+        string role
+        string passwordHash
+        json address
+        array preferences
+    }
+
+    Product ||--o{ OrderItem : contains
+    Product ||--o{ Inventory : tracks
+    Product {
+        string id PK
+        string name
+        string category
+        float price
+        string unit
+        boolean organic
+        string orchardArea FK
+    }
+
+    Order ||--|{ OrderItem : contains
+    Order {
+        string id PK
+        string customerId FK
+        float total
+        string status
+        string deliveryMethod
+        timestamp createdAt
+    }
+
+    OrderItem {
+        string productId FK
+        float quantity
+        float price
+        float subtotal
+    }
+
+    Inventory ||--|| Product : monitors
+    Inventory {
+        string productId PK
+        float quantity
+        string status
+        timestamp nextHarvest
+        float forecastedYield
+    }
+
+    OrchardArea ||--o{ Product : grows
+    OrchardArea ||--o{ SensorData : monitors
+    OrchardArea ||--o{ Task : location
+    OrchardArea {
+        string id PK
+        string name
+        string type
+        float size
+        json location
+        array sensorIds
+    }
+
+    SensorData }o--|| OrchardArea : belongs_to
+    SensorData {
+        string sensorId PK
+        string orchardAreaId FK
+        string type
+        float value
+        timestamp timestamp
+    }
+
+    Task }o--|| OrchardArea : assigned_to
+    Task }o--o{ User : assigned_to
+    Task {
+        string id PK
+        string title
+        string areaId FK
+        array assignedTo
+        string status
+        timestamp dueDate
+    }
+
+    WeatherData ||--o{ YieldPrediction : influences
+    WeatherData {
+        string date PK
+        float temperature
+        float humidity
+        float rainfall
+        string conditions
+    }
+
+    YieldPrediction }o--|| Product : predicts
+    YieldPrediction }o--|| OrchardArea : for_area
+    YieldPrediction {
+        string productId FK
+        string orchardAreaId FK
+        timestamp predictedDate
+        float predictedYield
+        float confidence
+    }
+
+    Visit }o--|| User : booked_by
+    Visit {
+        string id PK
+        string customerId FK
+        string visitType
+        timestamp date
+        int partySize
+        string status
+    }
+```
+
+## User Journey Flows
+
+```mermaid
+journey
+    title Customer Journey - From Browse to Purchase
+    section Discovery
+      Visit Website: 5: Customer
+      Browse Products: 5: Customer
+      View Seasonal Items: 4: Customer
+      Check Orchard Map: 3: Customer
+    section Selection
+      Add to Cart: 5: Customer
+      Review Cart: 4: Customer
+      Choose Delivery: 4: Customer
+    section Purchase
+      Create Account: 3: Customer
+      Enter Payment: 3: Customer
+      Confirm Order: 5: Customer
+      Receive Confirmation: 5: Customer
+    section Fulfillment
+      Track Order: 4: Customer
+      Receive Updates: 5: Customer
+      Get Delivery: 5: Customer
+      Leave Review: 3: Customer
+```
+
+```mermaid
+journey
+    title Farm Staff Journey - Daily Operations
+    section Morning Check
+      Login Dashboard: 5: Staff
+      Check Weather: 5: Staff
+      View Sensor Alerts: 4: Staff
+      Review Tasks: 5: Staff
+    section Field Work
+      Update Task Status: 5: Staff
+      Record Observations: 4: Staff
+      Check Sensor Readings: 5: Staff
+      Update Inventory: 4: Staff
+    section Planning
+      View Yield Predictions: 4: Staff
+      Schedule Harvests: 3: Staff
+      Assign Tasks: 4: Staff
+      Order Supplies: 3: Staff
+    section End of Day
+      Complete Reports: 3: Staff
+      Update Inventory: 4: Staff
+      Plan Tomorrow: 4: Staff
+      Logout: 5: Staff
+```
+
+## Tech Stack Integration Map
+
+```mermaid
+mindmap
+  root((OrchardHub))
+    Frontend
+      React
+        Components
+        Hooks
+        Router
+      Tailwind CSS
+        Responsive Design
+        Custom Themes
+      Visualization
+        D3.js
+        Recharts
+      Mobile
+        React Native
+    Backend
+      Go
+        Gin Framework
+        JWT Auth
+        Middleware
+      Services
+        RESTful APIs
+        WebSockets
+        File Upload
+    Database
+      DynamoDB
+        NoSQL Design
+        GSI Indexes
+        Streams
+      Redis
+        Caching
+        Sessions
+      S3
+        File Storage
+        Static Assets
+    ML/AI
+      SageMaker
+        Training
+        Endpoints
+        Batch Transform
+      XGBoost
+        Yield Prediction
+        Anomaly Detection
+      LLM
+        OpenAI API
+        LangChain
+        NLP Processing
+    IoT
+      AWS IoT Core
+        Device Management
+        Rules Engine
+      Sensors
+        Soil Moisture
+        Temperature
+        Humidity
+      Processing
+        Lambda Functions
+        Kinesis Streams
+    DevOps
+      CI/CD
+        GitHub Actions
+        Automated Testing
+      Monitoring
+        CloudWatch
+        X-Ray
+      Infrastructure
+        Docker
+        LocalStack
+```
+
+## Data Flow Architecture
+
+```mermaid
+flowchart LR
+    subgraph "Data Sources"
+        A1[IoT Sensors]
+        A2[Weather API]
+        A3[User Input]
+        A4[Historical Data]
+    end
+
+    subgraph "Ingestion Layer"
+        B1[IoT Core]
+        B2[API Gateway]
+        B3[Lambda Functions]
+        B4[Kinesis Streams]
+    end
+
+    subgraph "Processing Layer"
+        C1[Stream Processing]
+        C2[Batch Processing]
+        C3[ML Pipeline]
+        C4[Data Validation]
+    end
+
+    subgraph "Storage Layer"
+        D1[(DynamoDB)]
+        D2[(S3 Data Lake)]
+        D3[(Redis Cache)]
+        D4[(Model Store)]
+    end
+
+    subgraph "Analytics Layer"
+        E1[Real-time Analytics]
+        E2[Predictive Models]
+        E3[Business Intelligence]
+        E4[Reporting]
+    end
+
+    subgraph "Application Layer"
+        F1[Customer Portal]
+        F2[Farm Dashboard]
+        F3[Admin Console]
+        F4[Mobile App]
+    end
+
+    A1 --> B1
+    A2 --> B3
+    A3 --> B2
+    A4 --> D2
+
+    B1 --> B4
+    B2 --> C4
+    B3 --> C1
+    B4 --> C1
+
+    C1 --> D1
+    C2 --> D2
+    C3 --> D4
+    C4 --> D1
+
+    D1 --> E1
+    D2 --> C3
+    D3 --> F1
+    D4 --> E2
+
+    E1 --> F2
+    E2 --> F2
+    E3 --> F3
+    E4 --> F3
+
+    F1 --> A3
+    F2 --> A3
+    F4 --> A3
+```
+
+## System Security Architecture
+
+```mermaid
+graph TB
+    subgraph "Security Layers"
+        subgraph "Edge Security"
+            CloudFront[CloudFront CDN]
+            WAF[AWS WAF]
+        end
+
+        subgraph "Authentication"
+            Cognito[AWS Cognito]
+            JWT[JWT Tokens]
+            MFA[Multi-Factor Auth]
+        end
+
+        subgraph "API Security"
+            APIGW_Auth[API Gateway Auth]
+            Rate_Limit[Rate Limiting]
+            CORS[CORS Policy]
+        end
+
+        subgraph "Data Security"
+            Encryption_Transit[TLS/SSL]
+            Encryption_Rest[AES-256]
+            KMS[AWS KMS]
+        end
+
+        subgraph "Network Security"
+            VPC[VPC]
+            Security_Groups[Security Groups]
+            NACLs[Network ACLs]
+        end
+
+        subgraph "Monitoring"
+            GuardDuty[GuardDuty]
+            CloudTrail[CloudTrail]
+            Security_Hub[Security Hub]
+        end
+    end
+
+    CloudFront --> WAF
+    WAF --> APIGW_Auth
+    Cognito --> JWT
+    JWT --> APIGW_Auth
+    APIGW_Auth --> Rate_Limit
+    Rate_Limit --> CORS
+    CORS --> VPC
+    VPC --> Security_Groups
+    Security_Groups --> NACLs
+    Encryption_Transit --> KMS
+    Encryption_Rest --> KMS
+    GuardDuty --> Security_Hub
+    CloudTrail --> Security_Hub
+```
+
+This comprehensive architecture diagram shows:
+1. **Complete system overview** with all major components
+2. **Data model relationships** using entity-relationship diagrams
+3. **User journey flows** for customers and farm staff
+4. **Tech stack integration** as a mind map
+5. **Data flow architecture** from sources to applications
+6. **Security architecture** layers
+
+The diagram captures how OrchardHub integrates multiple technologies (React, Go, AWS services, ML/AI, IoT) to create a complete smart orchard management platform.
